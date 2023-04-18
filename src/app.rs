@@ -1,6 +1,9 @@
-use crate::RenderzError;
+use crate::{RenderzError, renderer::Renderer};
 
-pub struct App {}
+pub struct App {
+    #[allow(unused)]
+    renderer: Renderer,
+}
 
 impl App {
     pub fn new() -> AppBuilder {
@@ -20,6 +23,10 @@ impl AppBuilder {
     }
 
     pub fn build(self) -> App {
-        App {}
+        let renderer = Renderer::new();
+
+        App {
+            renderer,
+        }
     }
 }
