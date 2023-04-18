@@ -1,8 +1,12 @@
-use crate::{RenderzError, renderer::Renderer};
+use winit::event::*;
+use winit::event_loop::ControlFlow;
+use winit::{event_loop::EventLoop, window::WindowBuilder};
+
+use crate::{renderer::Renderer, RenderzError};
 
 pub struct App {
-    #[allow(unused)]
     renderer: Renderer,
+    event_loop: EventLoop<()>,
 }
 
 impl App {
@@ -11,7 +15,26 @@ impl App {
     }
 
     pub fn run(self) -> Result<(), RenderzError> {
-        Ok(())
+        self.event_loop
+            .run(move |event, _, control_flow| match event {
+                Event::WindowEvent {
+                    ref event,
+                    window_id,
+                } if window_id == self.renderer.window().id() => match event {
+                    WindowEvent::CloseRequested
+                    | WindowEvent::KeyboardInput {
+                        input:
+                            KeyboardInput {
+                                state: ElementState::Pressed,
+                                virtual_keycode: Some(VirtualKeyCode::Escape),
+                                ..
+                            },
+                        ..
+                    } => *control_flow = ControlFlow::Exit,
+                    _ => {}
+                },
+                _ => {},
+            });
     }
 }
 
@@ -23,10 +46,14 @@ impl AppBuilder {
     }
 
     pub fn build(self) -> App {
-        let renderer = Renderer::new();
+        let event_loop = EventLoop::new();
+        let window = WindowBuilder::new().build(&event_loop).unwrap();
+
+        let renderer = Renderer::new(window);
 
         App {
             renderer,
+            event_loop,
         }
     }
 }
