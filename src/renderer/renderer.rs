@@ -6,9 +6,7 @@ pub struct Renderer {
 
 impl Renderer {
     pub fn new(window: Window) -> Self {
-        Self {
-            window,
-        }
+        Self { window }
     }
 
     pub fn window(&self) -> &Window {
