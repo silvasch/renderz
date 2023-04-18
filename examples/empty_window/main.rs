@@ -1,6 +1,6 @@
 use renderz::App;
 
 fn main() {
-    let app = App::new().build();
+    let app = App::new().build().unwrap();
     app.run().unwrap();
 }

@@ -10,6 +10,7 @@ pub struct App {
 }
 
 impl App {
+    #[allow(clippy::new_ret_no_self)]
     pub fn new() -> AppBuilder {
         AppBuilder::new()
     }
@@ -33,7 +34,7 @@ impl App {
                     } => *control_flow = ControlFlow::Exit,
                     _ => {}
                 },
-                _ => {},
+                _ => {}
             });
     }
 }
@@ -45,15 +46,18 @@ impl AppBuilder {
         Self {}
     }
 
-    pub fn build(self) -> App {
+    pub fn build(self) -> Result<App, RenderzError> {
         let event_loop = EventLoop::new();
-        let window = WindowBuilder::new().build(&event_loop).unwrap();
+        let window = WindowBuilder::new()
+            .build(&event_loop)
+            .or_else(|_| return Err(RenderzError::WinitWindowCreationError))
+            .expect("error should be handled by closure");
 
         let renderer = Renderer::new(window);
 
-        App {
+        Ok(App {
             renderer,
             event_loop,
-        }
+        })
     }
 }
