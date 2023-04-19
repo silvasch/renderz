@@ -1,6 +1,6 @@
 # Renderz
 
-Renderz` is a simple rendering engine written in rust.
+`Renderz` is a simple rendering engine written in rust.
 
 ## Disclaimer
 
