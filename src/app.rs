@@ -50,7 +50,7 @@ impl AppBuilder {
         let event_loop = EventLoop::new();
         let window = WindowBuilder::new()
             .build(&event_loop)
-            .or_else(|_| return Err(RenderzError::WinitWindowCreationError))
+            .map_err(|_| RenderzError::WinitWindowCreationError)
             .expect("error should be handled by closure");
 
         let renderer = Renderer::new(window);
