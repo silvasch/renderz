@@ -15,7 +15,7 @@ impl App {
         AppBuilder::new()
     }
 
-    pub fn run(self) -> Result<(), RenderzError> {
+    pub fn run(mut self) -> Result<(), RenderzError> {
         self.event_loop
             .run(move |event, _, control_flow| match event {
                 Event::WindowEvent {
@@ -34,6 +34,15 @@ impl App {
                     } => *control_flow = ControlFlow::Exit,
                     _ => {}
                 },
+                Event::RedrawRequested(window_id) if window_id == self.renderer.window().id() => {
+                    match self.renderer.render() {
+                        Ok(_) => {}
+                        Err(RenderzError::WgpuSurfaceLost) => self.renderer.reconfigure(),
+                        Err(RenderzError::OutOfMemory) => *control_flow = ControlFlow::Exit,
+                        Err(e) => eprintln!("{:?}", e),
+                    }
+                }
+                Event::MainEventsCleared => self.renderer.window().request_redraw(),
                 _ => {}
             });
     }
@@ -50,10 +59,10 @@ impl AppBuilder {
         let event_loop = EventLoop::new();
         let window = WindowBuilder::new()
             .build(&event_loop)
-            .or_else(|_| return Err(RenderzError::WinitWindowCreationError))
-            .expect("error should be handled by closure");
+            .map_err(|_| RenderzError::WinitWindowCreationError)
+            .expect("err should be handled by map_err");
 
-        let renderer = Renderer::new(window);
+        let renderer = pollster::block_on(Renderer::new(window))?;
 
         Ok(App {
             renderer,
