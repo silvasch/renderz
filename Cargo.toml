@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 thiserror = "1.0.40"
+wgpu = "0.15.1"
+winit = "0.28.3"
