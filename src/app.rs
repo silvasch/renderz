@@ -2,10 +2,12 @@ use winit::event::*;
 use winit::event_loop::ControlFlow;
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
+use crate::renderer::{RenderObject, RenderObjectsManager};
 use crate::Color;
 use crate::{renderer::Renderer, RenderzError};
 
 pub struct App {
+    render_objects_manager: RenderObjectsManager,
     renderer: Renderer,
     event_loop: EventLoop<()>,
 }
@@ -40,6 +42,7 @@ impl App {
                     _ => {}
                 },
                 Event::RedrawRequested(window_id) if window_id == self.renderer.window().id() => {
+                    self.render_objects_manager.update();
                     match self.renderer.render() {
                         Ok(_) => {}
                         Err(RenderzError::WgpuSurfaceLost) => self.renderer.reconfigure(),
@@ -57,6 +60,7 @@ pub struct AppBuilder {
     is_resizable: bool,
     initial_size: Option<(u32, u32)>,
     background_color: Color,
+    render_objects: Vec<Box<dyn RenderObject>>,
 }
 
 impl AppBuilder {
@@ -65,7 +69,13 @@ impl AppBuilder {
             is_resizable: true,
             initial_size: None,
             background_color: Color::WHITE,
+            render_objects: vec![],
         }
+    }
+
+    pub fn with_render_object(mut self, render_object: Box<dyn RenderObject>) -> Self {
+        self.render_objects.push(render_object);
+        self
     }
 
     pub fn is_resizable(mut self, value: bool) -> Self {
@@ -101,6 +111,7 @@ impl AppBuilder {
         Ok(App {
             renderer,
             event_loop,
+            render_objects_manager: RenderObjectsManager::new(self.render_objects),
         })
     }
 }

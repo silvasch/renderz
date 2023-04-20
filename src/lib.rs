@@ -1,5 +1,6 @@
 mod app;
 pub use app::{App, AppBuilder};
+pub mod builtin;
 mod color;
 pub use color::Color;
 mod error;
