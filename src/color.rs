@@ -15,12 +15,12 @@ impl Color {
         }
     }
 
-    pub fn from_rgba(r: u8, g: u8, b: u8, a: u8) -> Self {
+    pub fn from_rgba(r: u8, g: u8, b: u8, a: f64) -> Self {
         Self {
             r: 255.0 / r as f64,
             g: 255.0 / g as f64,
             b: 255.0 / b as f64,
-            a: 255.0 / a as f64,
+            a,
         }
     }
 
