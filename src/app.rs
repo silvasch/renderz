@@ -2,6 +2,7 @@ use winit::event::*;
 use winit::event_loop::ControlFlow;
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
+use crate::Color;
 use crate::{renderer::Renderer, RenderzError};
 
 pub struct App {
@@ -32,6 +33,10 @@ impl App {
                             },
                         ..
                     } => *control_flow = ControlFlow::Exit,
+                    WindowEvent::Resized(physical_size) => self.renderer.resize(*physical_size),
+                    WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
+                        self.renderer.resize(**new_inner_size)
+                    }
                     _ => {}
                 },
                 Event::RedrawRequested(window_id) if window_id == self.renderer.window().id() => {
@@ -48,11 +53,34 @@ impl App {
     }
 }
 
-pub struct AppBuilder {}
+pub struct AppBuilder {
+    is_resizable: bool,
+    initial_size: Option<(u32, u32)>,
+    background_color: Color,
+}
 
 impl AppBuilder {
     pub(crate) fn new() -> Self {
-        Self {}
+        Self {
+            is_resizable: true,
+            initial_size: None,
+            background_color: Color::WHITE,
+        }
+    }
+
+    pub fn is_resizable(mut self, value: bool) -> Self {
+        self.is_resizable = value;
+        self
+    }
+
+    pub fn with_initial_size(mut self, initial_size: (u32, u32)) -> Self {
+        self.initial_size = Some(initial_size);
+        self
+    }
+
+    pub fn with_background_color(mut self, background_color: Color) -> Self {
+        self.background_color = background_color;
+        self
     }
 
     pub fn build(self) -> Result<App, RenderzError> {
@@ -62,7 +90,13 @@ impl AppBuilder {
             .map_err(|_| RenderzError::WinitWindowCreationError)
             .expect("err should be handled by map_err");
 
-        let renderer = pollster::block_on(Renderer::new(window))?;
+        window.set_resizable(self.is_resizable);
+        if let Some(initial_size) = self.initial_size {
+            let initial_size: winit::dpi::PhysicalSize<u32> = initial_size.into();
+            window.set_inner_size(initial_size);
+        }
+
+        let renderer = pollster::block_on(Renderer::new(window, self.background_color))?;
 
         Ok(App {
             renderer,

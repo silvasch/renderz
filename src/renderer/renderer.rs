@@ -1,6 +1,6 @@
 use winit::window::Window;
 
-use crate::RenderzError;
+use crate::{Color, RenderzError};
 
 pub struct Renderer {
     window: Window,
@@ -10,10 +10,12 @@ pub struct Renderer {
     device: wgpu::Device,
     config: wgpu::SurfaceConfiguration,
     size: winit::dpi::PhysicalSize<u32>,
+
+    background_color: Color,
 }
 
 impl Renderer {
-    pub async fn new(window: Window) -> Result<Self, RenderzError> {
+    pub async fn new(window: Window, background_color: Color) -> Result<Self, RenderzError> {
         let size = window.inner_size();
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
@@ -65,11 +67,14 @@ impl Renderer {
 
         Ok(Self {
             window,
+
             surface,
             device,
             queue,
             config,
             size,
+
+            background_color,
         })
     }
 
@@ -94,12 +99,7 @@ impl Renderer {
                     view: &view,
                     resolve_target: None,
                     ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color {
-                            r: 1.0,
-                            g: 1.0,
-                            b: 1.0,
-                            a: 1.0,
-                        }),
+                        load: wgpu::LoadOp::Clear(self.background_color.to_wgpu_color()),
                         store: true,
                     },
                 })],
