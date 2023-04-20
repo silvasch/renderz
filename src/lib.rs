@@ -5,6 +5,7 @@ mod color;
 pub use color::Color;
 mod error;
 pub use error::RenderzError;
+pub mod prelude;
 mod render_object;
 pub use render_object::RenderObject;
 mod render_objects_manager;

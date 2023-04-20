@@ -1,6 +1,6 @@
 #![allow(clippy::disallowed_methods)]
 
-use renderz::{App, Color};
+use renderz::prelude::*;
 
 fn main() {
     let app = App::new()
