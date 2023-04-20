@@ -2,6 +2,7 @@ use winit::event::*;
 use winit::event_loop::ControlFlow;
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
+use crate::Color;
 use crate::{renderer::Renderer, RenderzError};
 
 pub struct App {
@@ -55,6 +56,7 @@ impl App {
 pub struct AppBuilder {
     is_resizable: bool,
     initial_size: Option<(u32, u32)>,
+    background_color: Color,
 }
 
 impl AppBuilder {
@@ -62,6 +64,7 @@ impl AppBuilder {
         Self {
             is_resizable: true,
             initial_size: None,
+            background_color: Color::WHITE,
         }
     }
 
@@ -72,6 +75,11 @@ impl AppBuilder {
 
     pub fn with_initial_size(mut self, initial_size: (u32, u32)) -> Self {
         self.initial_size = Some(initial_size);
+        self
+    }
+
+    pub fn with_background_color(mut self, background_color: Color) -> Self {
+        self.background_color = background_color;
         self
     }
 
@@ -88,7 +96,7 @@ impl AppBuilder {
             window.set_inner_size(initial_size);
         }
 
-        let renderer = pollster::block_on(Renderer::new(window))?;
+        let renderer = pollster::block_on(Renderer::new(window, self.background_color))?;
 
         Ok(App {
             renderer,
