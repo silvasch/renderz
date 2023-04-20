@@ -2,9 +2,9 @@ use winit::event::*;
 use winit::event_loop::ControlFlow;
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
-use crate::renderer::{RenderObject, RenderObjectsManager};
 use crate::Color;
-use crate::{renderer::Renderer, RenderzError};
+use crate::{RenderObject, RenderObjectsManager};
+use crate::{Renderer, RenderzError};
 
 pub struct App {
     render_objects_manager: RenderObjectsManager,

@@ -15,6 +15,7 @@ impl RenderObjectsManager {
         }
     }
 
+    #[allow(unused)]
     pub fn render_objects(&self) -> &Vec<Box<dyn RenderObject>> {
         &self.render_objects
     }
