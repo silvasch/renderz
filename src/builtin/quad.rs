@@ -1,25 +1,26 @@
 use crate::prelude::*;
 
-pub struct Triangle {
-    pub corners: [Position; 3],
+pub struct Quad {
+    pub corners: [Position; 4],
     pub color: Color,
 }
 
-impl Triangle {
+impl Quad {
     pub fn new(
         corner_one: Position,
         corner_two: Position,
         corner_three: Position,
+        corner_four: Position,
         color: Color,
     ) -> Self {
         Self {
-            corners: [corner_one, corner_two, corner_three],
+            corners: [corner_one, corner_two, corner_three, corner_four],
             color,
         }
     }
 }
 
-impl RenderObject for Triangle {
+impl RenderObject for Quad {
     fn as_vertices(&self) -> (Vec<crate::Vertex>, Option<Vec<u16>>) {
         (
             vec![
@@ -35,8 +36,12 @@ impl RenderObject for Triangle {
                     position: self.corners[2],
                     color: self.color,
                 },
+                Vertex {
+                    position: self.corners[3],
+                    color: self.color,
+                },
             ],
-            None,
+            Some(vec![0, 1, 3, 1, 2, 3]),
         )
     }
 }
