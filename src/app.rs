@@ -86,7 +86,7 @@ impl AppBuilder {
         self
     }
 
-    pub fn with_min_size(mut self, min_window_size: (u32, u32)) -> Self {
+    pub fn with_min_window_size(mut self, min_window_size: (u32, u32)) -> Self {
         self.min_window_size = min_window_size;
         self
     }

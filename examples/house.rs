@@ -5,16 +5,16 @@ use renderz::prelude::*;
 pub fn house() -> CombinedRenderObject {
     CombinedRenderObject::new()
         .with_render_object(Box::new(Quad::new(
-            Position::new(400.0, 300.0, 0.0),
-            Position::new(440.0, 300.0, 0.0),
-            Position::new(440.0, 260.0, 0.0),
-            Position::new(400.0, 260.0, 0.0),
+            Position::new(450.0, 250.0, 0.0),
+            Position::new(350.0, 250.0, 0.0),
+            Position::new(350.0, 350.0, 0.0),
+            Position::new(450.0, 350.0, 0.0),
             Color::BLACK,
         )))
         .with_render_object(Box::new(Triangle::new(
-            Position::new(400.0, 260.0, 0.0),
-            Position::new(440.0, 260.0, 0.0),
-            Position::new(420.0, 240.0, 0.0),
+            Position::new(350.0, 250.0, 0.0),
+            Position::new(450.0, 250.0, 0.0),
+            Position::new(400.0, 180.0, 0.0),
             Color::BLACK,
         )))
         .build()
