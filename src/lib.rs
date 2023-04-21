@@ -15,6 +15,8 @@ pub(crate) use render_objects_manager::RenderObjectsManager;
 mod renderer;
 pub(crate) use renderer::Renderer;
 mod rendering_vertex;
+mod size;
 pub(crate) use rendering_vertex::RenderingVertex;
+pub use size::Size;
 mod vertex;
 pub use vertex::Vertex;
