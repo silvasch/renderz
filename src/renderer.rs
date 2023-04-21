@@ -130,7 +130,7 @@ impl Renderer {
     pub fn render(
         &mut self,
         vertices: &[RenderingVertex],
-        num_vertices: u32,
+        indices: &[u16],
     ) -> Result<(), RenderzError> {
         let output = match self.surface.get_current_texture() {
             Ok(output) => output,
@@ -152,6 +152,14 @@ impl Renderer {
                 contents: bytemuck::cast_slice(vertices),
                 usage: wgpu::BufferUsages::VERTEX,
             });
+        let num_indices = indices.len() as u32;
+        let index_buffer = self
+            .device
+            .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: Some("Index Buffer"),
+                contents: bytemuck::cast_slice(indices),
+                usage: wgpu::BufferUsages::INDEX,
+            });
 
         {
             let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
@@ -168,7 +176,8 @@ impl Renderer {
             });
             render_pass.set_pipeline(&self.render_pipeline);
             render_pass.set_vertex_buffer(0, vertex_buffer.slice(..));
-            render_pass.draw(0..num_vertices, 0..1);
+            render_pass.set_index_buffer(index_buffer.slice(..), wgpu::IndexFormat::Uint16);
+            render_pass.draw_indexed(0..num_indices, 0, 0..1);
         }
 
         self.queue.submit(std::iter::once(encoder.finish()));

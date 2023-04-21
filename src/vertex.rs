@@ -1,8 +1,18 @@
-use crate::{Color, Position};
+use crate::{rendering_vertex::RenderingVertex, Color, Position};
 
 pub struct Vertex {
     pub position: Position,
     pub color: Color,
 }
 
-impl Vertex {}
+impl Vertex {
+    pub(crate) fn as_rendering_vertex(
+        &self,
+        screen_size: &winit::dpi::PhysicalSize<u32>,
+    ) -> RenderingVertex {
+        RenderingVertex {
+            position: self.position.as_screenspace_coords(screen_size),
+            color: self.color.as_slice(),
+        }
+    }
+}
