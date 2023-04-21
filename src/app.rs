@@ -53,6 +53,7 @@ impl App {
 pub struct AppBuilder {
     is_resizable: bool,
     initial_size: Option<(u32, u32)>,
+    min_size: (u32, u32),
     background_color: Color,
     render_objects: Vec<Box<dyn RenderObject>>,
 }
@@ -62,6 +63,7 @@ impl AppBuilder {
         Self {
             is_resizable: true,
             initial_size: None,
+            min_size: (800, 600),
             background_color: Color::WHITE,
             render_objects: vec![],
         }
@@ -82,6 +84,11 @@ impl AppBuilder {
         self
     }
 
+    pub fn with_min_size(mut self, min_size: (u32, u32)) -> Self {
+        self.min_size = min_size;
+        self
+    }
+
     pub fn with_background_color(mut self, background_color: Color) -> Self {
         self.background_color = background_color;
         self
@@ -90,6 +97,10 @@ impl AppBuilder {
     pub fn build(self) -> Result<App, RenderzError> {
         let event_loop = EventLoop::new();
         let window = WindowBuilder::new()
+            .with_min_inner_size(winit::dpi::PhysicalSize::new(
+                self.min_size.0,
+                self.min_size.1,
+            ))
             .build(&event_loop)
             .map_err(|_| RenderzError::WinitWindowCreationError)
             .expect("err should be handled by map_err");
