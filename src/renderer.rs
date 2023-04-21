@@ -1,6 +1,7 @@
+use wgpu::util::DeviceExt;
 use winit::window::Window;
 
-use crate::{Color, RenderzError};
+use crate::{Color, RenderingVertex, RenderzError};
 
 pub struct Renderer {
     window: Window,
@@ -82,7 +83,7 @@ impl Renderer {
             vertex: wgpu::VertexState {
                 module: &shader,
                 entry_point: "vs_main",
-                buffers: &[],
+                buffers: &[RenderingVertex::desc()],
             },
             fragment: Some(wgpu::FragmentState {
                 module: &shader,
@@ -126,7 +127,11 @@ impl Renderer {
         })
     }
 
-    pub fn render(&mut self) -> Result<(), RenderzError> {
+    pub fn render(
+        &mut self,
+        vertices: &[RenderingVertex],
+        num_vertices: u32,
+    ) -> Result<(), RenderzError> {
         let output = match self.surface.get_current_texture() {
             Ok(output) => output,
             Err(e) => return Err(e.into()),
@@ -138,6 +143,14 @@ impl Renderer {
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor {
                 label: Some("Render Encoder"),
+            });
+
+        let vertex_buffer = self
+            .device
+            .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: Some("Vertex Buffer"),
+                contents: bytemuck::cast_slice(vertices),
+                usage: wgpu::BufferUsages::VERTEX,
             });
 
         {
@@ -154,7 +167,8 @@ impl Renderer {
                 depth_stencil_attachment: None,
             });
             render_pass.set_pipeline(&self.render_pipeline);
-            render_pass.draw(0..3, 0..1);
+            render_pass.set_vertex_buffer(0, vertex_buffer.slice(..));
+            render_pass.draw(0..num_vertices, 0..1);
         }
 
         self.queue.submit(std::iter::once(encoder.finish()));
@@ -178,5 +192,9 @@ impl Renderer {
 
     pub fn window(&self) -> &Window {
         &self.window
+    }
+
+    pub fn size(&self) -> &winit::dpi::PhysicalSize<u32> {
+        &self.size
     }
 }

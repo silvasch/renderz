@@ -43,7 +43,11 @@ impl App {
                 },
                 Event::RedrawRequested(window_id) if window_id == self.renderer.window().id() => {
                     self.render_objects_manager.update();
-                    match self.renderer.render() {
+                    let vertices = self
+                        .render_objects_manager
+                        .to_vertices(self.renderer.size());
+                    let num_vertices: u32 = vertices.len() as u32;
+                    match self.renderer.render(&vertices, num_vertices) {
                         Ok(_) => {}
                         Err(RenderzError::WgpuSurfaceLost) => self.renderer.reconfigure(),
                         Err(RenderzError::OutOfMemory) => *control_flow = ControlFlow::Exit,

@@ -1,36 +1,41 @@
+#[derive(Clone, Copy)]
 pub struct Color {
-    r: f64,
-    g: f64,
-    b: f64,
-    a: f64,
+    r: f32,
+    g: f32,
+    b: f32,
+    a: f32,
 }
 
 impl Color {
     pub fn from_rgb(r: u8, g: u8, b: u8) -> Self {
         Self {
-            r: 255.0 / r as f64,
-            g: 255.0 / g as f64,
-            b: 255.0 / b as f64,
+            r: 255.0 / r as f32,
+            g: 255.0 / g as f32,
+            b: 255.0 / b as f32,
             a: 1.0,
         }
     }
 
-    pub fn from_rgba(r: u8, g: u8, b: u8, a: f64) -> Self {
+    pub fn from_rgba(r: u8, g: u8, b: u8, a: f32) -> Self {
         Self {
-            r: 255.0 / r as f64,
-            g: 255.0 / g as f64,
-            b: 255.0 / b as f64,
+            r: 255.0 / r as f32,
+            g: 255.0 / g as f32,
+            b: 255.0 / b as f32,
             a,
         }
     }
 
     pub(crate) fn to_wgpu_color(&self) -> wgpu::Color {
         wgpu::Color {
-            r: self.r,
-            g: self.g,
-            b: self.b,
-            a: self.a,
+            r: self.r as f64,
+            g: self.g as f64,
+            b: self.b as f64,
+            a: self.a as f64,
         }
+    }
+
+    pub(crate) fn to_slice(&self) -> [f32; 3] {
+        [self.r, self.g, self.b]
     }
 
     pub const TRANSPARENT: Color = Color {
