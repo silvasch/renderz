@@ -1,4 +1,4 @@
-use crate::{rendering_vertex::RenderingVertex, Color, Position};
+use crate::{rendering_vertex::RenderingVertex, transform::Position, Color};
 
 pub struct Vertex {
     pub position: Position,

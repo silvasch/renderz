@@ -39,7 +39,7 @@ impl App {
                     _ => {}
                 },
                 Event::RedrawRequested(window_id) if window_id == self.renderer.window().id() => {
-                    let delta_time: f32 = (last_time.elapsed().as_millis()) as f32 / 1000_f32;
+                    let delta_time: f32 = (last_time.elapsed().as_nanos()) as f32 / 1000000.0;
                     self.render_objects_manager.update(delta_time);
                     last_time = Instant::now();
                     let (vertices, indices) = self

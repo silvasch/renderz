@@ -20,7 +20,7 @@ impl MovingSquare {
 
 impl RenderObject for MovingSquare {
     fn update(&mut self, delta_time: f32) {
-        self.rect.position.x += 100.0 * delta_time;
+        self.rect.position.x += delta_time / 5.0;
     }
 
     fn as_vertices(&self) -> (Vec<Vertex>, Option<Vec<u16>>) {

@@ -13,7 +13,7 @@ impl DebugObject {
 }
 
 impl RenderObject for DebugObject {
-    fn update(&mut self, _delta_time: f32) {
-        println!("Updated '{}'", self.name);
+    fn update(&mut self, delta_time: f32) {
+        println!("Updated '{}'\n\tDelta: {}", self.name, delta_time);
     }
 }
