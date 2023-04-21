@@ -20,10 +20,10 @@ impl RenderObjectsManager {
     pub fn to_vertices(&self, screen_size: &winit::dpi::PhysicalSize<u32>) -> Vec<RenderingVertex> {
         let mut out: Vec<RenderingVertex> = vec![];
         for render_object in &self.render_objects {
-            for vertex in render_object.to_vertices() {
+            for vertex in render_object.as_vertices() {
                 out.push(RenderingVertex {
                     position: vertex.position.as_screenspace_coords(screen_size),
-                    color: vertex.color.to_slice(),
+                    color: vertex.color.as_slice(),
                 });
             }
         }

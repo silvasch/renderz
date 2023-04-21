@@ -20,7 +20,7 @@ impl Triangle {
 }
 
 impl RenderObject for Triangle {
-    fn to_vertices(&self) -> Vec<crate::Vertex> {
+    fn as_vertices(&self) -> Vec<crate::Vertex> {
         vec![
             Vertex {
                 position: self.corners[0],

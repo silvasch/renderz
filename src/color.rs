@@ -25,7 +25,7 @@ impl Color {
         }
     }
 
-    pub(crate) fn to_wgpu_color(&self) -> wgpu::Color {
+    pub(crate) fn as_wgpu_color(&self) -> wgpu::Color {
         wgpu::Color {
             r: self.r as f64,
             g: self.g as f64,
@@ -34,7 +34,7 @@ impl Color {
         }
     }
 
-    pub(crate) fn to_slice(&self) -> [f32; 3] {
+    pub(crate) fn as_slice(&self) -> [f32; 3] {
         [self.r, self.g, self.b]
     }
 
