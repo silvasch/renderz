@@ -26,25 +26,25 @@ impl RenderObject for Rectangle {
                 },
                 Vertex {
                     position: Position::new(
-                        *self.position.x(),
-                        self.position.y() + self.size.height(),
-                        *self.position.z(),
+                        self.position.x,
+                        self.position.y + self.size.height,
+                        self.position.z,
                     ),
                     color: self.color,
                 },
                 Vertex {
                     position: Position::new(
-                        self.position.x() + self.size.width(),
-                        self.position.y() + self.size.height(),
-                        *self.position.z(),
+                        self.position.x + self.size.width,
+                        self.position.y + self.size.height,
+                        self.position.z,
                     ),
                     color: self.color,
                 },
                 Vertex {
                     position: Position::new(
-                        self.position.x() + self.size.width(),
-                        *self.position.y(),
-                        *self.position.z(),
+                        self.position.x + self.size.width,
+                        self.position.y,
+                        self.position.z,
                     ),
                     color: self.color,
                 },

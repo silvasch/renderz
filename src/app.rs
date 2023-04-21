@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use winit::event::*;
 use winit::event_loop::ControlFlow;
 use winit::{event_loop::EventLoop, window::WindowBuilder};
@@ -19,6 +21,8 @@ impl App {
     }
 
     pub fn run(mut self) -> Result<(), RenderzError> {
+        let mut last_time = Instant::now();
+
         self.event_loop
             .run(move |event, _, control_flow| match event {
                 Event::WindowEvent {
@@ -35,7 +39,9 @@ impl App {
                     _ => {}
                 },
                 Event::RedrawRequested(window_id) if window_id == self.renderer.window().id() => {
-                    self.render_objects_manager.update();
+                    let delta_time: f32 = (last_time.elapsed().as_millis()) as f32 / 1000_f32;
+                    self.render_objects_manager.update(delta_time);
+                    last_time = Instant::now();
                     let (vertices, indices) = self
                         .render_objects_manager
                         .to_vertices(self.renderer.window_size());

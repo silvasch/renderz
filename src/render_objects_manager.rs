@@ -11,9 +11,9 @@ impl RenderObjectsManager {
         Self { render_objects }
     }
 
-    pub fn update(&mut self) {
+    pub fn update(&mut self, delta_time: f32) {
         for render_object in &mut self.render_objects {
-            render_object.update();
+            render_object.update(delta_time);
         }
     }
 

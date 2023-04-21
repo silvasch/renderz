@@ -1,8 +1,8 @@
 #[derive(Clone, Copy)]
 pub struct Size {
-    width: f32,
-    height: f32,
-    depth: f32,
+    pub width: f32,
+    pub height: f32,
+    pub depth: f32,
 }
 
 impl Size {
@@ -12,17 +12,5 @@ impl Size {
             height,
             depth,
         }
-    }
-
-    pub fn width(&self) -> &f32 {
-        &self.width
-    }
-
-    pub fn height(&self) -> &f32 {
-        &self.height
-    }
-
-    pub fn depth(&self) -> &f32 {
-        &self.depth
     }
 }

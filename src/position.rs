@@ -1,8 +1,8 @@
 #[derive(Clone, Copy)]
 pub struct Position {
-    x: f32,
-    y: f32,
-    z: f32,
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
 }
 
 impl Position {
@@ -16,17 +16,5 @@ impl Position {
             (self.y / window_size.height as f32 * 2.0 - 1.0) * -1.0,
             self.z,
         ]
-    }
-
-    pub fn x(&self) -> &f32 {
-        &self.x
-    }
-
-    pub fn y(&self) -> &f32 {
-        &self.y
-    }
-
-    pub fn z(&self) -> &f32 {
-        &self.z
     }
 }
