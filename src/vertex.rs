@@ -11,7 +11,7 @@ impl Vertex {
         screen_size: &winit::dpi::PhysicalSize<u32>,
     ) -> RenderingVertex {
         RenderingVertex {
-            position: self.position.as_screenspace_coords(screen_size),
+            position: self.position.as_screen_coords(screen_size),
             color: self.color.as_slice(),
         }
     }

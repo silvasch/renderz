@@ -26,9 +26,11 @@ impl App {
                     window_id,
                 } if window_id == self.renderer.window().id() => match event {
                     WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
-                    WindowEvent::Resized(physical_size) => self.renderer.resize(*physical_size),
+                    WindowEvent::Resized(physical_size) => {
+                        self.renderer.resize_window(*physical_size)
+                    }
                     WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
-                        self.renderer.resize(**new_inner_size)
+                        self.renderer.resize_window(**new_inner_size)
                     }
                     _ => {}
                 },
@@ -36,7 +38,7 @@ impl App {
                     self.render_objects_manager.update();
                     let (vertices, indices) = self
                         .render_objects_manager
-                        .to_vertices(self.renderer.size());
+                        .to_vertices(self.renderer.window_size());
                     match self.renderer.render(&vertices, &indices) {
                         Ok(_) => {}
                         Err(RenderzError::WgpuSurfaceLost) => self.renderer.reconfigure(),
@@ -51,9 +53,9 @@ impl App {
 }
 
 pub struct AppBuilder {
-    is_resizable: bool,
-    initial_size: Option<(u32, u32)>,
-    min_size: (u32, u32),
+    is_window_resizable: bool,
+    initial_window_size: Option<(u32, u32)>,
+    min_window_size: (u32, u32),
     background_color: Color,
     render_objects: Vec<Box<dyn RenderObject>>,
 }
@@ -61,9 +63,9 @@ pub struct AppBuilder {
 impl AppBuilder {
     pub(crate) fn new() -> Self {
         Self {
-            is_resizable: true,
-            initial_size: None,
-            min_size: (800, 600),
+            is_window_resizable: true,
+            initial_window_size: None,
+            min_window_size: (800, 600),
             background_color: Color::WHITE,
             render_objects: vec![],
         }
@@ -75,17 +77,17 @@ impl AppBuilder {
     }
 
     pub fn is_resizable(mut self, value: bool) -> Self {
-        self.is_resizable = value;
+        self.is_window_resizable = value;
         self
     }
 
-    pub fn with_initial_size(mut self, initial_size: (u32, u32)) -> Self {
-        self.initial_size = Some(initial_size);
+    pub fn with_initial_window_size(mut self, initial_window_size: (u32, u32)) -> Self {
+        self.initial_window_size = Some(initial_window_size);
         self
     }
 
-    pub fn with_min_size(mut self, min_size: (u32, u32)) -> Self {
-        self.min_size = min_size;
+    pub fn with_min_size(mut self, min_window_size: (u32, u32)) -> Self {
+        self.min_window_size = min_window_size;
         self
     }
 
@@ -98,17 +100,17 @@ impl AppBuilder {
         let event_loop = EventLoop::new();
         let window = WindowBuilder::new()
             .with_min_inner_size(winit::dpi::PhysicalSize::new(
-                self.min_size.0,
-                self.min_size.1,
+                self.min_window_size.0,
+                self.min_window_size.1,
             ))
             .build(&event_loop)
             .map_err(|_| RenderzError::WinitWindowCreationError)
             .expect("err should be handled by map_err");
 
-        window.set_resizable(self.is_resizable);
-        if let Some(initial_size) = self.initial_size {
-            let initial_size: winit::dpi::PhysicalSize<u32> = initial_size.into();
-            window.set_inner_size(initial_size);
+        window.set_resizable(self.is_window_resizable);
+        if let Some(initial_size) = self.initial_window_size {
+            let initial_window_size: winit::dpi::PhysicalSize<u32> = initial_size.into();
+            window.set_inner_size(initial_window_size);
         }
 
         let renderer = pollster::block_on(Renderer::new(window, self.background_color))?;

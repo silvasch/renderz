@@ -10,10 +10,10 @@ impl Position {
         Self { x, y, z }
     }
 
-    pub(crate) fn as_screenspace_coords(&self, size: &winit::dpi::PhysicalSize<u32>) -> [f32; 3] {
+    pub(crate) fn as_screen_coords(&self, window_size: &winit::dpi::PhysicalSize<u32>) -> [f32; 3] {
         [
-            self.x / size.width as f32 * 2.0 - 1.0,
-            (self.y / size.height as f32 * 2.0 - 1.0) * -1.0,
+            self.x / window_size.width as f32 * 2.0 - 1.0,
+            (self.y / window_size.height as f32 * 2.0 - 1.0) * -1.0,
             self.z,
         ]
     }
