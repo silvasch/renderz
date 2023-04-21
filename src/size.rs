@@ -2,11 +2,16 @@
 pub struct Size {
     width: f32,
     height: f32,
+    depth: f32,
 }
 
 impl Size {
-    pub fn new(width: f32, height: f32) -> Self {
-        Self { width, height }
+    pub fn new(width: f32, height: f32, depth: f32) -> Self {
+        Self {
+            width,
+            height,
+            depth,
+        }
     }
 
     pub fn width(&self) -> &f32 {
@@ -15,5 +20,9 @@ impl Size {
 
     pub fn height(&self) -> &f32 {
         &self.height
+    }
+
+    pub fn depth(&self) -> &f32 {
+        &self.depth
     }
 }

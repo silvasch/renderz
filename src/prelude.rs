@@ -1,4 +1,4 @@
-pub use crate::builtin::{CombinedRenderObject, Quad, Triangle};
+pub use crate::builtin::{CombinedRenderObject, Quad, Rectangle, Triangle};
 pub use crate::App;
 pub use crate::Color;
 pub use crate::Position;
