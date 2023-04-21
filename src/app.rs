@@ -25,16 +25,7 @@ impl App {
                     ref event,
                     window_id,
                 } if window_id == self.renderer.window().id() => match event {
-                    WindowEvent::CloseRequested
-                    | WindowEvent::KeyboardInput {
-                        input:
-                            KeyboardInput {
-                                state: ElementState::Pressed,
-                                virtual_keycode: Some(VirtualKeyCode::Escape),
-                                ..
-                            },
-                        ..
-                    } => *control_flow = ControlFlow::Exit,
+                    WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
                     WindowEvent::Resized(physical_size) => self.renderer.resize(*physical_size),
                     WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
                         self.renderer.resize(**new_inner_size)
