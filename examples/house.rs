@@ -2,7 +2,7 @@
 
 use renderz::prelude::*;
 
-pub fn house() -> CombinedRenderObject {
+fn house() -> CombinedRenderObject {
     CombinedRenderObject::new()
         .with_render_object(Box::new(Quad::new(
             Position::new(450.0, 250.0, 0.0),
