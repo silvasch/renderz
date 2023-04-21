@@ -1,4 +1,4 @@
-use crate::RenderObject;
+use crate::prelude::*;
 
 pub struct DebugObject {
     name: String,
