@@ -4,6 +4,7 @@ use renderz::prelude::*;
 
 struct MovingSquare {
     rect: Rectangle,
+    dir: i8,
 }
 
 impl MovingSquare {
@@ -14,13 +15,20 @@ impl MovingSquare {
                 Size::new(100.0, 100.0, 0.0),
                 Color::BLACK,
             ),
+            dir: 1,
         }
     }
 }
 
 impl RenderObject for MovingSquare {
     fn update(&mut self, delta_time: f32) {
-        self.rect.position.x += delta_time / 5.0;
+        if self.rect.position.x > 550.0 {
+            self.dir = -1;
+        } else if self.rect.position.x < 150.0 {
+            self.dir = 1;
+        }
+
+        self.rect.position.x += delta_time / 5.0 * self.dir as f32;
     }
 
     fn as_vertices(&self) -> (Vec<Vertex>, Option<Vec<u16>>) {
