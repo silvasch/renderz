@@ -10,7 +10,8 @@ pub struct Renderer {
     queue: wgpu::Queue,
     device: wgpu::Device,
     config: wgpu::SurfaceConfiguration,
-    size: winit::dpi::PhysicalSize<u32>,
+
+    window_size: winit::dpi::PhysicalSize<u32>,
 
     render_pipeline: wgpu::RenderPipeline,
 
@@ -19,7 +20,7 @@ pub struct Renderer {
 
 impl Renderer {
     pub async fn new(window: Window, background_color: Color) -> Result<Self, RenderzError> {
-        let size = window.inner_size();
+        let window_size = window.inner_size();
 
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
             backends: wgpu::Backends::all(),
@@ -60,8 +61,8 @@ impl Renderer {
         let config = wgpu::SurfaceConfiguration {
             format,
             usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
-            width: size.width,
-            height: size.height,
+            width: window_size.width,
+            height: window_size.height,
             present_mode: surface_capabilies.present_modes[0],
             alpha_mode: surface_capabilies.alpha_modes[0],
             view_formats: vec![],
@@ -119,7 +120,8 @@ impl Renderer {
             device,
             queue,
             config,
-            size,
+
+            window_size,
 
             render_pipeline,
 
@@ -186,24 +188,22 @@ impl Renderer {
         Ok(())
     }
 
-    pub fn resize(&mut self, new_size: winit::dpi::PhysicalSize<u32>) {
-        if new_size.width > 0 && new_size.height > 0 {
-            self.size = new_size;
-            self.config.width = new_size.width;
-            self.config.height = new_size.height;
-            self.surface.configure(&self.device, &self.config);
-        }
+    pub fn resize_window(&mut self, new_window_size: winit::dpi::PhysicalSize<u32>) {
+        self.window_size = new_window_size;
+        self.config.width = new_window_size.width;
+        self.config.height = new_window_size.height;
+        self.surface.configure(&self.device, &self.config);
     }
 
     pub fn reconfigure(&mut self) {
-        self.resize(self.size);
+        self.resize_window(self.window_size);
     }
 
     pub fn window(&self) -> &Window {
         &self.window
     }
 
-    pub fn size(&self) -> &winit::dpi::PhysicalSize<u32> {
-        &self.size
+    pub fn window_size(&self) -> &winit::dpi::PhysicalSize<u32> {
+        &self.window_size
     }
 }

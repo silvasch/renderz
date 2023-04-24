@@ -11,15 +11,15 @@ impl RenderObjectsManager {
         Self { render_objects }
     }
 
-    pub fn update(&mut self) {
+    pub fn update(&mut self, delta_time: f32) {
         for render_object in &mut self.render_objects {
-            render_object.update();
+            render_object.update(delta_time);
         }
     }
 
     pub fn to_vertices(
         &self,
-        screen_size: &winit::dpi::PhysicalSize<u32>,
+        window_size: &winit::dpi::PhysicalSize<u32>,
     ) -> (Vec<RenderingVertex>, Vec<u16>) {
         let mut out_vertices: Vec<RenderingVertex> = vec![];
         let mut out_indices: Vec<u16> = vec![];
@@ -28,7 +28,7 @@ impl RenderObjectsManager {
             let (vertices, indices) = render_object.as_vertices();
             let num_vertices = vertices.len();
             for vertex in vertices {
-                out_vertices.push(vertex.as_rendering_vertex(screen_size));
+                out_vertices.push(vertex.as_rendering_vertex(window_size));
             }
 
             match indices {
