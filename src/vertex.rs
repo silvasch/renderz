@@ -1,5 +1,6 @@
 use crate::{rendering_vertex::RenderingVertex, transform::Position, Color};
 
+#[derive(Clone, Copy, Debug)]
 pub struct Vertex {
     pub position: Position,
     pub color: Color,
